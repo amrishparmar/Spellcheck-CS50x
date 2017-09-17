@@ -21,19 +21,19 @@ FILE* dict;
  */
 bool check(const char* word)
 {
-	char first = tolower(word[0]);
+    char first = tolower(word[0]);
     int hash_index = first - 'a';
     node* traverser = &atoz[hash_index];
     
     while (true) {
-    	if (traverser->next == NULL)
-    		break;
-    	else {
-    		traverser = traverser->next;
-    		if (strcasecmp(word, traverser->dictWord) == 0)
-    			return true;
-    	}
-   	}
+        if (traverser->next == NULL)
+            break;
+        else {
+            traverser = traverser->next;
+            if (strcasecmp(word, traverser->dictWord) == 0)
+                return true;
+        }
+    }
     return false;
 }
 
@@ -45,33 +45,33 @@ bool load(const char* dictionary)
     dict = fopen(dictionary, "r");
     
     if (dict != NULL) {
-    	
-    	dictLoaded = true;
-    	
-    	for (int i = 0; i < HASH_SIZE; i++)
-    		atoz[i].next = NULL;
-    	
-    	while(!feof(dict)) {
-    		node* newWord = malloc(sizeof(node));
-    		if (fscanf(dict, "%s", newWord->dictWord) == 1) {	
-				wordsInDict++;
-				for (int i = 'a'; i <= 'z'; i++) {
-					if ((newWord->dictWord)[0] == i) {
-						if (atoz[i - 'a'].next == NULL) {
-							newWord->next = NULL;
-							atoz[i - 'a'].next = newWord;
-							break;
-						} else {
-							newWord->next = atoz[i - 'a'].next;
-							atoz[i - 'a'].next = newWord;
-							break;
-						}
-					}	
-				}
-			} else
-				free(newWord);			
-    	}
-    	return true;
+
+        dictLoaded = true;
+        
+        for (int i = 0; i < HASH_SIZE; i++)
+            atoz[i].next = NULL;
+        
+        while(!feof(dict)) {
+            node* newWord = malloc(sizeof(node));
+            if (fscanf(dict, "%s", newWord->dictWord) == 1) {   
+                wordsInDict++;
+                for (int i = 'a'; i <= 'z'; i++) {
+                    if ((newWord->dictWord)[0] == i) {
+                        if (atoz[i - 'a'].next == NULL) {
+                            newWord->next = NULL;
+                            atoz[i - 'a'].next = newWord;
+                            break;
+                        } else {
+                            newWord->next = atoz[i - 'a'].next;
+                            atoz[i - 'a'].next = newWord;
+                            break;
+                        }
+                    }   
+                }
+            } else
+                free(newWord);          
+        }
+        return true;
     }
     return false;
 }
@@ -82,8 +82,8 @@ bool load(const char* dictionary)
 unsigned int size(void)
 {
     if (dictLoaded)
-    	return wordsInDict;
-    	
+        return wordsInDict;
+
     return 0;
 }
 
@@ -93,17 +93,17 @@ unsigned int size(void)
 bool unload(void)
 {
     if (dictLoaded) {
-    	for (int i = 0; i < HASH_SIZE; i++) {
-    		node* traverser = &atoz[i];
-    		traverser = traverser->next;
-    		while (traverser != NULL) {
-    			node* temp = traverser;
-    			traverser = traverser->next;
-    			free(temp);
-    		}
-    	}
-    	fclose(dict);
-    	return true;
+        for (int i = 0; i < HASH_SIZE; i++) {
+            node* traverser = &atoz[i];
+            traverser = traverser->next;
+            while (traverser != NULL) {
+                node* temp = traverser;
+                traverser = traverser->next;
+                free(temp);
+            }
+        }
+        fclose(dict);
+        return true;
     }
     return false;
 }
